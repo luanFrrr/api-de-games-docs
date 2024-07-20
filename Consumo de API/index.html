@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loja de Games</title>
+    <h2>Login</h2>
+    <input type="email" name="email" id="email" placeholder="Email" />
+    <br />
+    <input type="password" name="password" id="password" placeholder="Senha" />
+    <br />
+    <button onclick="login()">Entrar</button>
+  </head>
+  <body>
+    <hr />
+    <h4>Lista de Games</h4>
+    <ul id="games"></ul>
+    <hr />
+    <h4>Novo Game</h4>
+
+    <input type="text" name="title" id="title" placeholder="Título" />
+    <br />
+    <input type="number" name="year" id="year" placeholder="Ano" />
+    <br />
+    <input type="number" name="price" id="price" placeholder="Preço" />
+    <br />
+    <button type="button" onclick="createGame()">Criar</button>
+
+    <hr />
+
+    <h4>Editar Game</h4>
+    <input type="text" name="idEdit" id="idEdit" placeholder="ID" readonly />
+    <br />
+    <input type="text" name="titleEdit" id="titleEdit" placeholder="Título" />
+    <br />
+    <input type="number" name="yearEdit" id="yearEdit" placeholder="Ano" />
+    <br />
+    <input type="number" name="priceEdit" id="priceEdit" placeholder="Preço" />
+    <br />
+    <button type="button" onclick="updateGame()">Editar</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script>
+      const axiosConfig = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+
+      function login() {
+        const emailField = document.getElementById("email");
+        const passwordField = document.getElementById("password");
+
+        const email = emailField.value;
+        const password = passwordField.value;
+
+        axios
+          .post("http://localhost:45678/auth", {
+            email,
+            password,
+          })
+          .then((res) => {
+            const token = res.data.token;
+            localStorage.setItem("token", token);
+            axiosConfig.headers.Authorization =
+              '"Bearer " + localStorage.getItem("token")';
+          })
+          .catch((err) => {
+            alert("LOGIN INVÁLIDO");
+          });
+      }
+
+      function createGame() {
+        const titleInput = document.getElementById("title");
+        const yearInput = document.getElementById("year");
+        const priceInput = document.getElementById("price");
+
+        const game = {
+          title: titleInput.value,
+          year: yearInput.value,
+          price: priceInput.value,
+        };
+
+        console.log("Game data:", game); // Verifica os dados do game
+
+        axios
+          .post("http://localhost:45678/games", game, axiosConfig)
+          .then((response) => {
+            console.log("Response status:", response.status); // Verifica o status da resposta
+            if (response.status == 200) {
+              console.log("Alert should trigger"); // Verifica se a condição foi atingida
+              alert("Game cadastrado!");
+            }
+          })
+          .catch((err) => {
+            console.log("Error:", err);
+          });
+      }
+
+      function deleteGame(listItem) {
+        const id = listItem.getAttribute("data-id");
+        axios
+          .delete("http://localhost:45678/games/" + id, axiosConfig)
+          .then((response) => {
+            alert("Game deletado");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function loadForm(listItem) {
+        const id = listItem.getAttribute("data-id");
+        const title = listItem.getAttribute("data-title"); // Corrigido de "data.title" para "data-title"
+        const year = listItem.getAttribute("data-year");
+        const price = listItem.getAttribute("data-price"); // Corrigido de "data-rice" para "data-price"
+
+        document.getElementById("idEdit").value = id;
+        document.getElementById("titleEdit").value = title;
+        document.getElementById("yearEdit").value = year;
+        document.getElementById("priceEdit").value = price;
+      }
+
+      function updateGame() {
+        const idInput = document.getElementById("idEdit");
+        const titleInput = document.getElementById("titleEdit");
+        const yearInput = document.getElementById("yearEdit");
+        const priceInput = document.getElementById("priceEdit");
+
+        const game = {
+          title: titleInput.value,
+          year: yearInput.value,
+          price: priceInput.value,
+        };
+
+        const id = idInput.value;
+
+        axios
+          .put("http://localhost:45678/games/" + id, game, axiosConfig)
+          .then((response) => {
+            console.log("Response status:", response.status); // Verifica o status da resposta
+            if (response.status === 200) {
+              console.log("Alert should trigger"); // Verifica se a condição foi atingida
+              alert("Game Atualizado!");
+            }
+          })
+          .catch((err) => {
+            console.log("Error:", err);
+          });
+      }
+
+      axios
+        .get("http://localhost:45678/games", axiosConfig)
+        .then((response) => {
+          const games = response.data;
+          const list = document.getElementById("games");
+
+          games.forEach((game) => {
+            const item = document.createElement("li");
+
+            item.setAttribute("data-id", game.id);
+            item.setAttribute("data-title", game.title);
+            item.setAttribute("data-year", game.year);
+            item.setAttribute("data-price", game.price);
+
+            item.innerHTML =
+              game.id +
+              " - " +
+              game.title +
+              " - $" +
+              game.price +
+              " - " +
+              game.year;
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Deletar";
+            deleteBtn.addEventListener("click", function () {
+              deleteGame(item);
+            });
+
+            const editBtn = document.createElement("button");
+            editBtn.innerHTML = "Editar";
+            editBtn.addEventListener("click", function () {
+              loadForm(item);
+            });
+
+            item.appendChild(deleteBtn);
+            item.appendChild(editBtn);
+
+            list.appendChild(item);
+          });
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    </script>
+  </body>
+</html>
