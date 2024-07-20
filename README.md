@@ -14,22 +14,44 @@ Exemplo de resposta:
 
 [
     {
-        "id": 23,
-        "title": "Call of duty MW",
-        "year": 2019,
-        "price": 60
-    },
-    {
-        "id": 65,
-        "title": "Sea of thieves",
-        "year": 2018,
-        "price": 40
+        "id": 1,
+        "title": "Mortal Kombat",
+        "year": 2023,
+        "price": 120,
+        "createdAt": "2024-07-05T12:57:27.000Z",
+        "updatedAt": "2024-07-17T14:13:04.000Z"
     },
     {
         "id": 2,
-        "title": "Minecraft",
-        "year": 2012,
-        "price": 20
+        "title": "The Sims",
+        "year": 2008,
+        "price": 200,
+        "createdAt": "2024-07-05T12:59:17.000Z",
+        "updatedAt": "2024-07-09T22:52:17.000Z"
+    },
+    {
+        "id": 4,
+        "title": "Warcraft",
+        "year": 2008,
+        "price": 200,
+        "createdAt": "2024-07-09T22:53:32.000Z",
+        "updatedAt": "2024-07-09T22:53:32.000Z"
+    },
+    {
+        "id": 5,
+        "title": "Star Wars",
+        "year": 2024,
+        "price": 550,
+        "createdAt": "2024-07-09T23:52:00.000Z",
+        "updatedAt": "2024-07-09T23:52:00.000Z"
+    },
+    {
+        "id": 13,
+        "title": "God of War Ragnarok",
+        "year": 2018,
+        "price": 150,
+        "createdAt": "2024-07-17T14:05:21.000Z",
+        "updatedAt": "2024-07-17T14:13:47.000Z"
     }
 ]
 
@@ -54,8 +76,8 @@ password: Senha do usuário cadastrado no sistema, com aquele determinado e-mail
 Exemplo:
 ```
 {
-	"email": "joaob@gmail.com",
-	"password": "nodejs"
+"email": "joaob@gmail.com",
+"password": "cocoazul"
 }
 ```
 #### Respostas
@@ -65,7 +87,7 @@ Caso essa resposta aconteça você vai receber o token JWT para conseguir acessa
 Exemplo de resposta:
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ2aWN0b3JkZXZ0YkBndWlhZG9wcm9ncmFtYWRvci5jb20iLCJpYXQiOjE1OTE3ODI0NzUsImV4cCI6MTU5MTk1NTI3NX0.y8kp3BxKgC86KFiq6-tAABukR6vi1guTPeRQhO8IdwU"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTQ5MTExNywiZXhwIjoxNzIxNDk0NzE3fQ.YsW4vaMbB5SUdllS3qoeBFV3QyeYPP3Jx7JQ3u1qr7k"
 }
 ```
 ##### Falha na autenticação! 401
@@ -73,5 +95,7 @@ Caso essa resposta aconteça, isso significa que aconteceu alguma falha durante 
 
 Exemplo de resposta:
 ```
-{err: "Credenciais inválidas!"}
+{
+    "error": "An error occurred"
+}
 ```
